@@ -1,127 +1,174 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <title>Status Tabungan</title>
-      <style>
-         .circle {
-         position: relative;
-         width: 80px;
-         height: 80px;
-         }
-         .circle svg {
-         width: 80px;
-         height: 80px;
-         transform: rotate(-90deg);
-         }
-         .circle circle {
-         fill: none;
-         stroke-width: 6;
-         stroke: #334155;
-         }
-         .circle circle:nth-child(2) {
-         stroke: #22c55e;
-         stroke-dasharray: 220;
-         transition: stroke-dashoffset 0.8s ease;
-         }
-         .circle .number {
-         font-size: 14px;
-         color: white;
-         position: absolute;
-         top: 50%;
-         left: 50%;
-         transform: translate(-50%, -50%);
-         font-weight: bold;
-         }
-         body {
-         font-family: Arial;
-         background: #0f172a;
-         color: white;
-         padding: 20px;
-         }
-         .card {
-         background: #1e293b;
-         padding: 15px;
-         margin: 10px;
-         border-radius: 10px;
-         }
-         .green { color: #22c55e; }
-         .red { color: #ef4444; }
-      </style>
-   </head>
-   <body>
-      <h1>📊 Status Tabungan</h1>
-      <div id="data"></div>
-      <script>
-         const API = "https://opensheet.elk.sh/1yTxjTY_ldTZ4qW-XnXP6oKHwC20j5dqLGelwfV9l2P8/Sheet1";
-         
-         fetch(API)
-           .then(res => res.json())
-           .then(data => {
-             let html = "";
-         
-             data.forEach(user => {
-         
-               let months = [
-               "Mar 2026","Apr 2026","Mei 2026","Jun 2026","Jul 2026","Agu 2026",
-               "Sep 2026","Okt 2026","Nov 2026","Des 2026","Jan 2027","Feb 2027"
-             ];
-         
-             let bayar = 0;
-             let lastBayar = "-";
-             let history = "";
-         
-             months.forEach(m => {
-               let tgl = user[m + " Tanggal"];
-               let bukti = user[m + " Bukti"];
-         
-               if (tgl && tgl !== "-") {
-                 bayar++;
-                 lastBayar = m;
-         
-                 history += `
-                   <p>📅 ${m} - ${tgl} 
-                   ${bukti ? `<a href="${bukti}" target="_blank">[Bukti]</a>` : ""}</p>
-                 `;
-               }
-             });
-         
-             let persen = Math.floor((bayar / 12) * 100);
-                let warna = persen >= 80 ? "#22c55e" : persen >= 50 ? "#eab308" : "#ef4444";
-               let circle = `
-             <div class="circle">
-               <svg>
-                 <circle cx="40" cy="40" r="35"></circle>
-                 <circle cx="40" cy="40" r="35"
-                   style="stroke:${warna}; stroke-dashoffset:${220 - (220 * persen / 100)}"
-               </svg>
-               <div class="number">${persen}%</div>
-             </div>
-             `;
-         
-                    html += `
-             <div class="card">
-               <div style="display:flex; justify-content:space-between; align-items:center;">
-             
-                 <div>
-                   <h2>${user.Nama}</h2>
-                   <p>Total Bayar: ${bayar} bulan</p>
-                   <p>📅 Terakhir bayar: ${lastBayar}</p>
-                 </div>
-         
-                 ${circle}
-         
-               </div>
-         
-               <details>
-                 <summary>📜 Lihat Riwayat</summary>
-                 ${history || "<p>Belum ada pembayaran</p>"}
-               </details>
-             </div>
-             `;
-             });
-         
-             document.getElementById("data").innerHTML = html;
-           });
-      </script>
-   </body>
+<head>
+  <title>UPDATE TRANSAKSI SUMBAR 2027</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      padding: 15px;
+      font-size: 16px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 12px;
+    }
+
+    /* CIRCLE */
+    .circle {
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+
+    .circle svg {
+      width: 80px;
+      height: 80px;
+      transform: rotate(-90deg);
+    }
+
+    .circle circle {
+      fill: none;
+      stroke-width: 6;
+      stroke: #334155;
+    }
+
+    .circle circle:nth-child(2) {
+      stroke-dasharray: 220;
+      transition: stroke-dashoffset 0.8s ease;
+    }
+
+    .circle .number {
+      font-size: 14px;
+      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: bold;
+    }
+
+    /* MOBILE */
+    @media (max-width: 600px) {
+      .circle {
+        width: 60px;
+        height: 60px;
+      }
+
+      .circle svg {
+        width: 60px;
+        height: 60px;
+      }
+
+      h2 {
+        font-size: 16px;
+      }
+
+      p {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>📊 Status Tabungan</h1>
+<div id="data">Loading...</div>
+
+<script>
+const API = "https://opensheet.elk.sh/1yTxjTY_ldTZ4qW-XnXP6oKHwC20j5dqLGelwfV9l2P8/Sheet1";
+
+fetch(API)
+  .then(res => res.json())
+  .then(data => {
+    let html = "";
+
+    data.forEach(user => {
+
+      let months = [
+        "Mar 2026","Apr 2026","Mei 2026","Jun 2026","Jul 2026","Agu 2026",
+        "Sep 2026","Okt 2026","Nov 2026","Des 2026","Jan 2027","Feb 2027"
+      ];
+
+      let bayar = 0;
+      let lastBayar = "-";
+      let history = "";
+
+      months.forEach(m => {
+        let tgl = user[m + " Tanggal"];
+        let bukti = user[m + " Bukti"];
+
+        if (tgl && tgl !== "-") {
+          bayar++;
+          lastBayar = m;
+
+          history += `
+            <p>📅 ${m} - ${tgl} 
+            ${bukti ? `<a href="${bukti}" target="_blank" style="color:#38bdf8">[Bukti]</a>` : ""}
+            </p>
+          `;
+        }
+      });
+
+      let persen = Math.floor((bayar / 12) * 100);
+
+      let warna = persen >= 80 ? "#22c55e" : persen >= 50 ? "#eab308" : "#ef4444";
+
+      let offset = 220 - (220 * persen / 100);
+
+      let circle = `
+      <div class="circle">
+        <svg>
+          <circle cx="40" cy="40" r="35"></circle>
+          <circle cx="40" cy="40" r="35"
+            style="stroke:${warna}; stroke-dashoffset:${offset}">
+          </circle>
+        </svg>
+        <div class="number">${persen}%</div>
+      </div>
+      `;
+
+      html += `
+      <div class="card">
+        <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center;">
+          
+          <div>
+            <h2>${user.Nama}</h2>
+            <p>Total Bayar: ${bayar} bulan</p>
+            <p>📅 Terakhir bayar: ${lastBayar}</p>
+          </div>
+
+          ${circle}
+
+        </div>
+
+        <details>
+          <summary>📜 Lihat Riwayat</summary>
+          ${history || "<p>Belum ada pembayaran</p>"}
+        </details>
+      </div>
+      `;
+    });
+
+    document.getElementById("data").innerHTML = html;
+  })
+  .catch(err => {
+    document.getElementById("data").innerHTML = "❌ ERROR LOAD DATA";
+    console.error(err);
+  });
+</script>
+
+</body>
 </html>
