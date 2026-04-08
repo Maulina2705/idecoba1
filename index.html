@@ -3,6 +3,37 @@
 <head>
   <title>Status Tabungan</title>
   <style>
+    .circle {
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+
+    .circle svg {
+      width: 80px;
+      height: 80px;
+      transform: rotate(-90deg);
+    }
+
+    .circle circle {
+      fill: none;
+      stroke-width: 6;
+      stroke: #334155;
+    }
+
+    .circle circle:nth-child(2) {
+      stroke: #22c55e;
+      stroke-dasharray: 220;
+      transition: 0.5s;
+    }
+
+    .circle .number {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: bold;
+    }
     body {
       font-family: Arial;
       background: #0f172a;
@@ -59,21 +90,41 @@ fetch(API)
     });
 
     let persen = Math.floor((bayar / 12) * 100);
+      let circle = `
+    <div class="circle">
+      <svg>
+        <circle cx="40" cy="40" r="35"></circle>
+        <circle cx="40" cy="40" r="35"
+          style="stroke-dashoffset:${220 - (220 * persen / 100)}"></circle>
+      </svg>
+      <div class="number">${persen}%</div>
+    </div>
+    `;
 
     html += `
       <div class="card">
         <h2>${user.Nama}</h2>
         <p>Total Bayar: ${bayar} bulan</p>
         <p>📅 Terakhir bayar: ${lastBayar}</p>
-        <p class="${persen == 100 ? 'green' : 'red'}">
-          Progress: ${persen}%
-        </p>
+           html += `
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+    
+        <div>
+          <h2>${user.Nama}</h2>
+          <p>Total Bayar: ${bayar} bulan</p>
+          <p>📅 Terakhir bayar: ${lastBayar}</p>
+        </div>
 
-        <details>
-          <summary>📜 Lihat Riwayat</summary>
-          ${history || "<p>Belum ada pembayaran</p>"}
-        </details>
+        ${circle}
+
       </div>
+
+      <details>
+        <summary>📜 Lihat Riwayat</summary>
+        ${history || "<p>Belum ada pembayaran</p>"}
+      </details>
+    </div>
     `;
     });
 
