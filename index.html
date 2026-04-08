@@ -10,7 +10,6 @@
       background: #0f172a;
       color: white;
       padding: 15px;
-      font-size: 16px;
     }
 
     h1 {
@@ -25,15 +24,28 @@
       border-radius: 12px;
     }
 
-    /* CIRCLE */
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .info {
+      flex: 1;
+    }
+
+    /* CIRCLE FIX TOTAL */
     .circle {
-  width: 70px;
-  height: 70px;
-  flex-shrink: 0;
-}
+      position: relative;
+      width: 60px;
+      height: 60px;
+      min-width: 60px;
+    }
+
     .circle svg {
-      width: 100%;
-      height: 100%;
+      width: 60px;
+      height: 60px;
       transform: rotate(-90deg);
     }
 
@@ -43,49 +55,27 @@
       stroke: #334155;
     }
 
-    .circle circle:nth-child(2) {
+    .circle circle.progress {
       stroke-dasharray: 220;
       transition: stroke-dashoffset 0.8s ease;
     }
 
     .circle .number {
-      font-size: 14px;
-      color: white;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      font-size: 12px;
       font-weight: bold;
     }
 
-    /* MOBILE */
-    @media (max-width: 600px) {
-  .card {
-    padding: 12px;
-  }
+    details {
+      margin-top: 10px;
+    }
 
-  .circle {
-    width: 55px;
-    height: 55px;
-  }
-
-  .circle svg {
-    width: 55px;
-    height: 55px;
-  }
-
-  .circle .number {
-    font-size: 12px;
-  }
-
-  h2 {
-    font-size: 16px;
-  }
-
-  p {
-    font-size: 13px;
-  }
-}
+    a {
+      color: #38bdf8;
+    }
   </style>
 </head>
 
@@ -123,23 +113,21 @@ fetch(API)
 
           history += `
             <p>📅 ${m} - ${tgl} 
-            ${bukti ? `<a href="${bukti}" target="_blank" style="color:#38bdf8">[Bukti]</a>` : ""}
+            ${bukti ? `<a href="${bukti}" target="_blank">[Bukti]</a>` : ""}
             </p>
           `;
         }
       });
 
       let persen = Math.floor((bayar / 12) * 100);
-
       let warna = persen >= 80 ? "#22c55e" : persen >= 50 ? "#eab308" : "#ef4444";
-
       let offset = 220 - (220 * persen / 100);
 
       let circle = `
       <div class="circle">
         <svg>
-          <circle cx="40" cy="40" r="35"></circle>
-          <circle cx="40" cy="40" r="35"
+          <circle cx="30" cy="30" r="26"></circle>
+          <circle class="progress" cx="30" cy="30" r="26"
             style="stroke:${warna}; stroke-dashoffset:${offset}">
           </circle>
         </svg>
@@ -149,13 +137,14 @@ fetch(API)
 
       html += `
       <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
-          
-         <div style="max-width:65%;">
-  <h2>${user.Nama}</h2>
-  <p>Total Bayar: ${bayar} bulan</p>
-  <p>📅 Terakhir bayar: ${lastBayar}</p>
-</div>
+        <div class="row">
+
+          <div class="info">
+            <h2>${user.Nama}</h2>
+            <p>Total Bayar: ${bayar} bulan</p>
+            <p>📅 Terakhir bayar: ${lastBayar}</p>
+          </div>
+
           ${circle}
 
         </div>
@@ -172,7 +161,6 @@ fetch(API)
   })
   .catch(err => {
     document.getElementById("data").innerHTML = "❌ ERROR LOAD DATA";
-    console.error(err);
   });
 </script>
 
