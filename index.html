@@ -21,9 +21,11 @@
          .circle circle:nth-child(2) {
          stroke: #22c55e;
          stroke-dasharray: 220;
-         transition: 0.5s;
+         transition: stroke-dashoffset 0.8s ease;
          }
          .circle .number {
+         font-size: 14px;
+         color: white;
          position: absolute;
          top: 50%;
          left: 50%;
@@ -84,12 +86,13 @@
              });
          
              let persen = Math.floor((bayar / 12) * 100);
+                let warna = persen >= 80 ? "#22c55e" : persen >= 50 ? "#eab308" : "#ef4444";
                let circle = `
              <div class="circle">
                <svg>
                  <circle cx="40" cy="40" r="35"></circle>
                  <circle cx="40" cy="40" r="35"
-                   style="stroke-dashoffset:${220 - (220 * persen / 100)}"></circle>
+                   style="stroke:${warna}; stroke-dashoffset:${220 - (220 * persen / 100)}"
                </svg>
                <div class="number">${persen}%</div>
              </div>
