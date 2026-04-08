@@ -34,33 +34,47 @@ fetch(API)
 
     data.forEach(user => {
 
-      // Hitung berapa bulan sudah bayar
-      let bayar = 0;
+      let months = [
+      "Mar 2026","Apr 2026","Mei 2026","Jun 2026","Jul 2026","Agu 2026",
+      "Sep 2026","Okt 2026","Nov 2026","Des 2026","Jan 2027","Feb 2027"
+    ];
 
-      if (user["Mar 2026 Tanggal"]) bayar++;
-      if (user["Apr 2026 Tanggal"]) bayar++;
-      if (user["Mei 2026 Tanggal"]) bayar++;
-      if (user["Jun 2026 Tanggal"]) bayar++;
-      if (user["Jul 2026 Tanggal"]) bayar++;
-      if (user["Agu 2026 Tanggal"]) bayar++;
-      if (user["Sep 2026 Tanggal"]) bayar++;
-      if (user["Okt 2026 Tanggal"]) bayar++;
-      if (user["Nov 2026 Tanggal"]) bayar++;
-      if (user["Des 2026 Tanggal"]) bayar++;
-      if (user["Jan 2027 Tanggal"]) bayar++;
-      if (user["Feb 2027 Tanggal"]) bayar++;
+    let bayar = 0;
+    let lastBayar = "-";
+    let history = "";
 
-      let persen = Math.floor((bayar / 12) * 100);
+    months.forEach(m => {
+      let tgl = user[m + " Tanggal"];
+      let bukti = user[m + " Bukti"];
 
-      html += `
-        <div class="card">
-          <h2>${user.Nama}</h2>
-          <p>Total Bayar: ${bayar} bulan</p>
-          <p class="${persen == 100 ? 'green' : 'red'}">
-            Progress: ${persen}%
-          </p>
-        </div>
-      `;
+      if (tgl && tgl !== "-") {
+        bayar++;
+        lastBayar = m;
+
+        history += `
+          <p>📅 ${m} - ${tgl} 
+          ${bukti ? `<a href="${bukti}" target="_blank">[Bukti]</a>` : ""}</p>
+        `;
+      }
+    });
+
+    let persen = Math.floor((bayar / 12) * 100);
+
+    html += `
+      <div class="card">
+        <h2>${user.Nama}</h2>
+        <p>Total Bayar: ${bayar} bulan</p>
+        <p>📅 Terakhir bayar: ${lastBayar}</p>
+        <p class="${persen == 100 ? 'green' : 'red'}">
+          Progress: ${persen}%
+        </p>
+
+        <details>
+          <summary>📜 Lihat Riwayat</summary>
+          ${history || "<p>Belum ada pembayaran</p>"}
+        </details>
+      </div>
+    `;
     });
 
     document.getElementById("data").innerHTML = html;
