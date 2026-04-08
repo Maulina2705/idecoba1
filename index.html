@@ -1,61 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Status Tabungan</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      padding: 20px;
+    }
+    .card {
+      background: #1e293b;
+      padding: 15px;
+      margin: 10px;
+      border-radius: 10px;
+    }
+    .green { color: #22c55e; }
+    .red { color: #ef4444; }
+  </style>
+</head>
+<body>
+
+<h1>📊 Status Tabungan</h1>
+<div id="data"></div>
+
 <script>
-const API = "https://opensheet.elk.sh/1yTxjTY_ldTZ4qW-XnXP6oKHwC20j5dqLGelwfV9l2P8/Sheet1";
+const API = "https://opensheet.elk.sh/ID_KAMU/Sheet1";
 
 fetch(API)
   .then(res => res.json())
   .then(data => {
-    const container = document.querySelector(".container");
-    container.innerHTML = "";
+    let html = "";
 
-    data.forEach((row, i) => {
+    data.forEach(user => {
 
-      // HITUNG PROGRESS (misal dari 24 kolom)
-      let filled = 0;
-      let total = 24;
+      // Hitung berapa bulan sudah bayar
+      let bayar = 0;
 
-      Object.values(row).forEach(val => {
-        if(val && val.trim() !== "") filled++;
-      });
+      if (user["Mar 2026 Tanggal"]) bayar++;
+      if (user["Apr 2026 Tanggal"]) bayar++;
+      if (user["Mei 2026 Tanggal"]) bayar++;
+      if (user["Jun 2026 Tanggal"]) bayar++;
+      if (user["Jul 2026 Tanggal"]) bayar++;
+      if (user["Agu 2026 Tanggal"]) bayar++;
+      if (user["Sep 2026 Tanggal"]) bayar++;
+      if (user["Okt 2026 Tanggal"]) bayar++;
+      if (user["Nov 2026 Tanggal"]) bayar++;
+      if (user["Des 2026 Tanggal"]) bayar++;
+      if (user["Jan 2027 Tanggal"]) bayar++;
+      if (user["Feb 2027 Tanggal"]) bayar++;
 
-      let percent = Math.round((filled / total) * 100);
+      let persen = Math.floor((bayar / 12) * 100);
 
-      // AMBIL NAMA
-      let nama = row["Nama"] || "User";
-
-      // AMBIL BULAN TERAKHIR
-      let lastPay = "-";
-      let keys = Object.keys(row);
-
-      for(let k of keys.reverse()){
-        if(row[k] && row[k].trim() !== ""){
-          lastPay = k;
-          break;
-        }
-      }
-
-      // BUAT CARD
-      let card = `
+      html += `
         <div class="card">
-          <div class="info">
-            <div class="name">${nama}</div>
-            <div class="detail">💰 Total: ${filled} bulan</div>
-            <div class="detail">📅 Terakhir: ${lastPay}</div>
-            <button class="btn">Riwayat</button>
-          </div>
-
-          <div class="progress" id="p${i}">
-            <span>${percent}%</span>
-          </div>
+          <h2>${user.Nama}</h2>
+          <p>Total Bayar: ${bayar} bulan</p>
+          <p class="${persen == 100 ? 'green' : 'red'}">
+            Progress: ${persen}%
+          </p>
         </div>
       `;
-
-      container.innerHTML += card;
-
-      // SET PROGRESS
-      setTimeout(() => {
-        setProgress("p"+i, percent);
-      }, 10);
-
     });
+
+    document.getElementById("data").innerHTML = html;
   });
 </script>
+
+</body>
+</html>
