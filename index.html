@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Status Tabungan</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      padding: 20px;
+    }
+    .card {
+      background: #1e293b;
+      padding: 15px;
+      margin: 10px;
+      border-radius: 10px;
+    }
+    .green { color: #22c55e; }
+    .red { color: #ef4444; }
+  </style>
+</head>
+<body>
+
+<h1>📊 Status Tabungan</h1>
+<div id="data"></div>
+
+<script>
+const API = "https://opensheet.elk.sh/ID_KAMU/Sheet1";
+
+fetch(API)
+  .then(res => res.json())
+  .then(data => {
+    let html = "";
+
+    data.forEach(user => {
+
+      // Hitung berapa bulan sudah bayar
+      let bayar = 0;
+
+      if (user["Mar 2026 Tanggal"]) bayar++;
+      if (user["Apr 2026 Tanggal"]) bayar++;
+      if (user["Mei 2026 Tanggal"]) bayar++;
+      if (user["Jun 2026 Tanggal"]) bayar++;
+      if (user["Jul 2026 Tanggal"]) bayar++;
+      if (user["Agu 2026 Tanggal"]) bayar++;
+      if (user["Sep 2026 Tanggal"]) bayar++;
+      if (user["Okt 2026 Tanggal"]) bayar++;
+      if (user["Nov 2026 Tanggal"]) bayar++;
+      if (user["Des 2026 Tanggal"]) bayar++;
+      if (user["Jan 2027 Tanggal"]) bayar++;
+      if (user["Feb 2027 Tanggal"]) bayar++;
+
+      let persen = Math.floor((bayar / 12) * 100);
+
+      html += `
+        <div class="card">
+          <h2>${user.Nama}</h2>
+          <p>Total Bayar: ${bayar} bulan</p>
+          <p class="${persen == 100 ? 'green' : 'red'}">
+            Progress: ${persen}%
+          </p>
+        </div>
+      `;
+    });
+
+    document.getElementById("data").innerHTML = html;
+  });
+</script>
+
+</body>
+</html>
