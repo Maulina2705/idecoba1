@@ -175,13 +175,39 @@
                <div class="number">${persen}%</div>
              </div>
              `;
+              let today = new Date();
+         let tanggal = today.getDate();
+         
+         // mapping bulan sekarang ke format di data
+         let bulanMap = [
+         "Jan 2027","Feb 2027","Mar 2026","Apr 2026","Mei 2026","Jun 2026",
+         "Jul 2026","Agu 2026","Sep 2026","Okt 2026","Nov 2026","Des 2026"
+         ];
+         
+         // ambil bulan sekarang (format sama seperti di sheet)
+         let currentMonth = months[today.getMonth()];
+         
+         // cek apakah bulan ini sudah bayar
+         let sudahBayarBulanIni = user[currentMonth + " Tanggal"] && user[currentMonth + " Tanggal"] !== "-";
+         
+         // default style
+         let nameStyle = "";
+         let warningIcon = "";
+         
+         // kondisi telat bayar
+         if (tanggal > 10 && !sudahBayarBulanIni) {
+         nameStyle = "color: #eab308;"; // kuning
+         warningIcon = " ⚠️";
+         }
          
              html += `
              <div class="card">
                <div class="row">
          
                  <div class="info">
-                   <div class="name-box">${user.Nama}</div>
+                   <div class="name-box" style="${nameStyle}">
+         ${user.Nama}${warningIcon}
+         </div>
                    <p>Total Bayar: ${bayar} bulan</p>
                    <p>Terakhir bayar: ${lastBayar}</p>
                  </div>
